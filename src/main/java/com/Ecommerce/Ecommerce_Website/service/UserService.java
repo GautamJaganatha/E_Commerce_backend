@@ -36,13 +36,14 @@ public class UserService {
                 .role(Role.USER)
                 .build();
         userRepo.save(user);
-        var jwtToken = jwtService.generateToken(user.getFirstname());
+        var jwtToken = jwtService.generateToken(user.getFirstname(),user.getRole());
         return AuthenticateResponse.builder()
                 .token(jwtToken)
                 .build();
     }
 
     public AuthenticateResponse signUp(SignUp signUp) {
+        System.out.println(signUp);
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         signUp.getEmail(),
@@ -53,7 +54,7 @@ public class UserService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found for email: " + signUp.getEmail());
         } else {
-            var jwtToken = jwtService.generateToken((signUp.getEmail()));
+            var jwtToken = jwtService.generateToken((signUp.getEmail()),user.getRole());
             return AuthenticateResponse.builder()
                     .token(jwtToken)
                     .build();
