@@ -19,6 +19,4 @@ public class Category {
     private String categoryType;
     @Lob
     private String description;
-
-
 }
