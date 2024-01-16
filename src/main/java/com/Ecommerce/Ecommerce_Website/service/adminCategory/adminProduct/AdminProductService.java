@@ -9,4 +9,6 @@ public interface AdminProductService {
     public ProductDto addProduct(ProductDto productDto) throws IOException;
 
     public List<ProductDto> getAllProducts();
+
+    List<ProductDto> getAllProductsByName(String name);
 }
