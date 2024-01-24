@@ -4,6 +4,7 @@ import com.Ecommerce.Ecommerce_Website.dto.CategoryDto;
 import com.Ecommerce.Ecommerce_Website.entity.Category;
 import com.Ecommerce.Ecommerce_Website.service.adminCategory.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,9 @@ public class AdminCategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/category")
-    public ResponseEntity<Category> createCategory(@RequestBody CategoryDto categoryDto){
+    public ResponseEntity<Category> createCategory(@RequestHeader HttpHeaders httpHeaders, @RequestBody CategoryDto categoryDto){
+
+        System.out.println(httpHeaders);
         Category category = categoryService.createCategory(categoryDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }

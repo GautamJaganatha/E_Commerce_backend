@@ -3,8 +3,11 @@ package com.Ecommerce.Ecommerce_Website.service;
 import com.Ecommerce.Ecommerce_Website.dto.AuthenticateResponse;
 import com.Ecommerce.Ecommerce_Website.dto.SignUp;
 import com.Ecommerce.Ecommerce_Website.dto.UserDto;
+import com.Ecommerce.Ecommerce_Website.entity.Order;
 import com.Ecommerce.Ecommerce_Website.entity.User;
+import com.Ecommerce.Ecommerce_Website.enums.OrderStatus;
 import com.Ecommerce.Ecommerce_Website.enums.Role;
+import com.Ecommerce.Ecommerce_Website.repo.OrderRepository;
 import com.Ecommerce.Ecommerce_Website.repo.UserRepo;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +31,8 @@ public class UserService {
 
     private final AuthenticationManager authenticationManager;
 
+    private OrderRepository orderRepository;
+
     public AuthenticateResponse register(UserDto userDto) {
         var user = User.builder()
                 .firstname(userDto.getFirstname())
@@ -35,7 +41,17 @@ public class UserService {
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .role(Role.USER)
                 .build();
-        userRepo.save(user);
+        User createdUser = userRepo.save(user);
+
+        Order order = new Order();
+        order.setAmount(0L);
+        order.setTotalAmount(0L);
+        order.setDiscount(0L);
+        order.setUser(createdUser);
+        order.setOrderStatus(OrderStatus.Pending);
+        orderRepository.save(order);
+
+
         var jwtToken = jwtService.generateToken(user.getFirstname(),user.getRole());
         return AuthenticateResponse.builder()
                 .token(jwtToken)
@@ -65,17 +81,38 @@ public class UserService {
 
     @PostConstruct
     public void createAdminAccount(){
-        User adminAccount = (User) userRepo.findByRole(Role.ADMIN);
-        if (null == adminAccount){
-            User user = new User();
-            user.setEmail("admin@test.com");
-            user.setFirstname("admin");
-            user.setLastname("1");
-            user.setRole(Role.ADMIN);
-            user.setPassword(passwordEncoder.encode("admin"));
-            userRepo.save(user);
+        Optional<User> adminacc = userRepo.findByEmail("admin@gautam.com");
+        if (null==adminacc) {
+
+            User adminGautam = new User();
+            adminGautam.setEmail("admin@gautam.com");
+            adminGautam.setFirstname("Gautam");
+            adminGautam.setLastname("Jaganatha");
+            adminGautam.setRole(Role.ADMIN);
+            adminGautam.setPassword(passwordEncoder.encode("admin"));
+            userRepo.save(adminGautam);
+
         }
+
+        Optional<User> adminacc2 = userRepo.findByEmail("admin@gautam.com");
+        if (null==adminacc2) {
+
+
+            User adminSaiChand = new User();
+            adminSaiChand.setEmail("admin@saichand.com");
+            adminSaiChand.setFirstname("Sai");
+            adminSaiChand.setLastname("Chandh");
+            adminSaiChand.setRole(Role.ADMIN);
+            adminSaiChand.setPassword(passwordEncoder.encode("admin"));
+
+            userRepo.save(adminSaiChand);
+            String str = String.valueOf(userRepo.findByLastname("chandh"));
+            System.out.println(str);
+
+        }
+
     }
+
 
     public List<User> getUser() {
        return userRepo.findAll();
