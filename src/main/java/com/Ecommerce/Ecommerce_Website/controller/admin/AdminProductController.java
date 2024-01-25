@@ -1,8 +1,10 @@
 package com.Ecommerce.Ecommerce_Website.controller.admin;
 
+import com.Ecommerce.Ecommerce_Website.dto.FAQDto;
 import com.Ecommerce.Ecommerce_Website.dto.ProductDto;
 import com.Ecommerce.Ecommerce_Website.entity.Product;
 import com.Ecommerce.Ecommerce_Website.service.adminCategory.adminProduct.AdminProductService;
+import com.Ecommerce.Ecommerce_Website.service.faq.FAQService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import java.util.List;
 public class AdminProductController {
 
     private final AdminProductService adminProductService;
+
+    private final FAQService faqService;
 
 
     @PostMapping("/addProduct")
@@ -47,6 +51,11 @@ public class AdminProductController {
            return ResponseEntity.noContent().build();
         }
        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/faq/{productId}")
+    public ResponseEntity<FAQDto> postFAQ(@PathVariable Long productId, @RequestBody FAQDto faqDto){
+        return ResponseEntity.ok(faqService.postFAQ(productId,faqDto));
     }
 
 
