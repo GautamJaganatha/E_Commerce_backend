@@ -9,4 +9,5 @@ public class CategoryDto {
     private Long id;
     private String categoryType;
     private String description;
+    private String name;
 }

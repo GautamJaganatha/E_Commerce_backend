@@ -101,12 +101,12 @@ public class UserService {
             User adminSaiChand = new User();
             adminSaiChand.setEmail("admin@saichand.com");
             adminSaiChand.setFirstname("Sai");
-            adminSaiChand.setLastname("Chandh");
+            adminSaiChand.setLastname("Chand");
             adminSaiChand.setRole(Role.ADMIN);
             adminSaiChand.setPassword(passwordEncoder.encode("admin"));
 
             userRepo.save(adminSaiChand);
-            String str = String.valueOf(userRepo.findByLastname("chandh"));
+            String str = String.valueOf(userRepo.findByLastname("chand"));
             System.out.println(str);
 
         }
